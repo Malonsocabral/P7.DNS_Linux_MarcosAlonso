@@ -14,7 +14,7 @@ Aqui como podemos observar, significa que la carpeta .conf y .zonas, se van a mo
 Por lo que debemos crear estas carpetas con sus respectivas configuraciones.  
 En la carpeta de zonas debemos poner las distintas zonas que tendra nuestro servidors DNS y como podemos observar, yo tengo creada una zona llamada `db.pepe.int` y esto quiere decir que si hacemos un dig de por ejemplo `dig ns.pepe.int` nos devolvera la ip `192.28.5.1` ya que es lo que esta establecido en el apartado de zonas.  
   
-  
+
 Y luego en el apartado de .conf, yo lo que hice fue juntar todos los posibles ficheros de configuracion en uno en donde ponemos las propias zonas y configuraciones como los forwarders, etc.
 
 
@@ -61,7 +61,7 @@ prueba23	IN A		125.44.32.1
 >Cliente con ferramientas de rede
 En mi caso instale un ubuntu ya que el alpine lo habia instalado en la anterior practica y queria probar a poner un cliente de ubuntu ya que el comando de instalacion de bash es distinto que el de sh que tiene alpine.  
 Hay dos formas de instalar estas herramientas de red (dig):  
-1. Una vez echo el `docker compose up` hacer en otra terminal un `docker exec -it ubuntu /bin/bash` para asi entrar en la terminal del cliente de ubuntu y poner el comando `apt-get update && apt-get install -y dnsutils` ( en alpine seria : "`apk update && apk add bind-tools`")  
+1. Una vez echo el `docker compose up` hacer en otra terminal un `docker exec -it ubuntu /bin/bash` para asi entrar en la terminal del cliente de ubuntu y poner el comando `apt-get update && apt-get install -y dnsutils` ( en alpine seria : "`apk update && apk add --no-cache bind-tools`")  
 2. Poniendo en el .yaml la configuracion :
 ```
     command: /bin/bash -c "apt-get update && apt-get install -y dnsutils && bash" 
@@ -69,7 +69,7 @@ Hay dos formas de instalar estas herramientas de red (dig):
 
 Para alpine seria algo tal que asi:
 ```
-    command: /bin/sh -c "apk update && apk add bind-tools" 
+    command: /bin/sh -c "apk update && apk add --no-cache bind-tools && sh
 ```
   
     
