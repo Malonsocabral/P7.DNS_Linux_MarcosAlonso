@@ -21,14 +21,16 @@ Y luego en el apartado de .conf, yo lo que hice fue juntar todos los posibles fi
 
 
 ## Red propia interna para tódo-los contenedores
->ip fixa no servidor
+>Ip fixa no servidor  
+
 Para crear una IP fija del servidor es tan sencillo como marcarlo en el .yaml como yo hice. Ejemplo en el apartado de network: 
 ```networks:
       bind9_subnet:
         ipv4_address: 192.28.5.4
 ```
 
-> Configurar Forwarders
+> Configurar Forwarders  
+
 Para configurar los forwarders, nos dirigimos a nuestro unico fichero de configuracion en `named.conf`, y en apartado de options, metemos los forwarders que son los servidores a los que acudira bind9 si no es capaz de resolver la consulta, por lo que quedaria tal que así:
 ```options {
 	directory "/var/cache/bind";
@@ -43,10 +45,12 @@ Para configurar los forwarders, nos dirigimos a nuestro unico fichero de configu
 }
 ```
 
->Crear Zona propia
+>Crear Zona propia  
+
 Para crear esta zona propia, creamos un fichero de texto en la carpeta zonas con el nomre de la zona que queremos, en mi caso cree la zona "db.pepe.int"
 
->Rexistros a configurar: NS, A, CNAME, TXT, SOA
+>Rexistros a configurar: NS, A, CNAME, TXT, SOA  
+
 Para crear estes rexistros na zona que acabamos de crear, entramos en el documento de texto que acabamos de crear y ponemos a configurar la segunda parte del documento donde configuramos el NS, A, CNAME, SOA, etc. A continuacion voy a dejar un fragmento del documento donde asigno una ip a cada configuracion.
 ```
 ns		IN A		192.28.5.1
