@@ -62,7 +62,8 @@ prueba23	IN A		125.44.32.1
 ``` 
 
 
->Cliente con ferramientas de rede
+>Cliente con ferramientas de rede  
+
 En mi caso instale un ubuntu ya que el alpine lo habia instalado en la anterior practica y queria probar a poner un cliente de ubuntu ya que el comando de instalacion de bash es distinto que el de sh que tiene alpine.  
 Hay dos formas de instalar estas herramientas de red (dig):  
 1. Una vez echo el `docker compose up` hacer en otra terminal un `docker exec -it ubuntu /bin/bash` para asi entrar en la terminal del cliente de ubuntu y poner el comando `apt-get update && apt-get install -y dnsutils` ( en alpine seria : "`apk update && apk add --no-cache bind-tools`")  
