@@ -4,26 +4,24 @@
 ## Configura un sistema cun servidor DNS e un cliente alpine que cumpla os seguintes requisitos.
 Para comezar con esta practica, teno que comentar que vou adxuntar o `.yaml` xunto cos dous directorios que contenñen os volumenes que eu mesmo modifiquei.
 ## Volumen por separado da configuración
-Como podemos ver en el .yaml en el apartado de volumenes ponemos lo siguiente 
+Como podemos ver no .yaml no apartado de volumes poñemos o seguinte:  
 ```
     volumes:
       - ./conf:/etc/bind/
       - ./zonas:/var/lib/bind/
 ```
-Aqui como podemos observar, significa que la carpeta .conf y .zonas, se van a montar como volumenes en el bind9.  
-Por lo que debemos crear estas carpetas con sus respectivas configuraciones.  
-En la carpeta de zonas debemos poner las distintas zonas que tendra nuestro servidors DNS y como podemos observar, yo tengo creada una zona llamada `db.pepe.int` y esto quiere decir que si hacemos un dig de por ejemplo `dig ns.pepe.int` nos devolvera la ip `192.28.5.1` ya que es lo que esta establecido en el apartado de zonas.  
+Aqui como podemos observar, significa que a carpeta `.conf` e `.zonas`, se van a montar como volumenes no bind9.  
+Por lo que debemos crear estas carpetas coas suas respectivas configuraciones.  
+Na carpeta de zonas debemos poñer as distintas zonas que terá o noso servidor DNS e como podemos observar, eu teno creada unha zona chamada `db.pepe.int`, isto quere dicir que si facemos un dig de por exemplo `dig ns.pepe.int` nos devolvera a ip `192.28.5.1` xa que é o que esta establecido no apartado de zonas.  
   
 
-Y luego en el apartado de .conf, yo lo que hice fue juntar todos los posibles ficheros de configuracion en uno en donde ponemos las propias zonas y configuraciones como los forwarders, etc.
-
-
+Luego no apartado de `.conf`, eu o que fixen fue xuntar todos os posibles ficheros de configuracion nun onde poñemos as propias zonas e configuracions como os forwarders, etc.
 
 
 ## Red propia interna para tódo-los contenedores
 >Ip fixa no servidor  
 
-Para crear una IP fija del servidor es tan sencillo como marcarlo en el .yaml como yo hice. Ejemplo en el apartado de network: 
+Para crear unha IP fixa do servidor é tan sinxelo como marcalo no .yaml como eu fixen. Exemplo no apartado de `network`: 
 ```networks:
       bind9_subnet:
         ipv4_address: 192.28.5.4
@@ -31,11 +29,11 @@ Para crear una IP fija del servidor es tan sencillo como marcarlo en el .yaml co
 
 > Configurar Forwarders  
 
-Para configurar los forwarders, nos dirigimos a nuestro unico fichero de configuracion en `named.conf`, y en apartado de options, metemos los forwarders que son los servidores a los que acudira bind9 si no es capaz de resolver la consulta, por lo que quedaria tal que así:
+Para configurar os forwarders, nos diriximos a o noso unico ficheiro de configuracion en `named.conf`, e no apartado de options, metemos os forwarders, que son os servidores aos que acudira bind9 se no é capaz de resolver a consulta, polo que quedaria tal que así:
 ```options {
 	directory "/var/cache/bind";
 
-    dnssec-validation no; #Soluciona el error de validacion
+    dnssec-validation no; #Soluciona o error de validacion
 
 	forwarders {
 	 	8.8.8.8;
@@ -47,11 +45,15 @@ Para configurar los forwarders, nos dirigimos a nuestro unico fichero de configu
 
 >Crear Zona propia  
 
-Para crear esta zona propia, creamos un fichero de texto en la carpeta zonas con el nomre de la zona que queremos, en mi caso cree la zona "db.pepe.int"
+Para crear esta zona propia, creamos un fichero de texto na carpeta `zonas` co nome da zona que queremos, no meu caso creei a zona "db.pepe.int"
 
 >Rexistros a configurar: NS, A, CNAME, TXT, SOA  
 
-Para crear estes rexistros na zona que acabamos de crear, entramos en el documento de texto que acabamos de crear y ponemos a configurar la segunda parte del documento donde configuramos el NS, A, CNAME, SOA, etc. A continuacion voy a dejar un fragmento del documento donde asigno una ip a cada configuracion.
+Para crear estes rexistros na zona que acabamos de crear, entramos no documento de texto e poñemos a configuracion do NS, A, CNAME, SOA, etc. A continuacion vou a deixar un fragmento do documento donde asigno una ip a cada configuracion.  
+
+>[!NOTE]
+>Cabe destacar que o documento db.pepe.int, ten todos estas configuracions explicadas máis a fondo
+
 ```
 ns		IN A		192.28.5.1
 test	IN A		192.28.5.4
@@ -64,10 +66,10 @@ prueba23	IN A		125.44.32.1
 
 >Cliente con ferramientas de rede  
 
-En mi caso instale un ubuntu ya que el alpine lo habia instalado en la anterior practica y queria probar a poner un cliente de ubuntu ya que el comando de instalacion de bash es distinto que el de sh que tiene alpine.  
-Hay dos formas de instalar estas herramientas de red (dig):  
-1. Una vez echo el `docker compose up` hacer en otra terminal un `docker exec -it ubuntu /bin/bash` para asi entrar en la terminal del cliente de ubuntu y poner el comando `apt-get update && apt-get install -y dnsutils` ( en alpine seria : "`apk update && apk add --no-cache bind-tools`")  
-2. Poniendo en el .yaml la configuracion :
+No meu caso instalei un ubuntu xa que o alpine xa habiao instalado na anterior practica e queria probar a poñer un cliente de ubuntu xa que os comandos de instalacion de bash e dig son distintos que os sh que ten alpine.  
+Hay duas formas de instalar estas ferramientas de red (dig):  
+1. Unha vez feito o `docker compose up` debemos facer noutra terminal un `docker exec -it ubuntu /bin/bash` para asi entrar na terminal do cliente de ubuntu e poñer o comando `apt-get update && apt-get install -y dnsutils` (en alpine seria o comando : "`apk update && apk add --no-cache bind-tools`")  
+2. Poñendo directamente no .yaml la configuracion para que asi xa nos teñamos que facer o update e install a man :
 ```
     command: /bin/bash -c "apt-get update && apt-get install -y dnsutils && bash" 
 ```
@@ -78,7 +80,7 @@ Para alpine seria algo tal que asi:
 ```
   
     
-Y luego ya solo nos falta conprobar que el dig funciona de acuerdo a las zonas y todo responde correctamente, a continuacion dejo un ejemplo de una resolucion de mi zona :
+Logo xa solo nos falta comprobar que o `dig` funciona de acuerdo as zonas e todo responde correctamente, a continuacion deixo un exemplo dunha resolucion da miña zona :
 ```
     dig ns.pepe.int
 
@@ -102,4 +104,7 @@ ns.pepe.int.		38400	IN	A	192.28.5.1
 ;; WHEN: Thu Nov 14 16:14:50 UTC 2024
 ;; MSG SIZE  rcvd: 84
 
-```
+```  
+  
+>[!NOTE]
+>E por ultimo cabe destacar que tanto no `yaml` como nas carpetas `conf` e `zonas` temos todas al lineas correctamente explicadas para saber o correcto funcionamento de todo o sistema.
