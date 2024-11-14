@@ -78,7 +78,7 @@ Para alpine seria algo tal que asi:
 ```
   
     
-    Y luego ya solo nos falta conprobar que el dig funciona de acuerdo a las zonas y todo responde correctamente, a continuacion dejo un ejemplo de una resolucion de mi zona :
+Y luego ya solo nos falta conprobar que el dig funciona de acuerdo a las zonas y todo responde correctamente, a continuacion dejo un ejemplo de una resolucion de mi zona :
 ```
     dig ns.pepe.int
 
