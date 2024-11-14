@@ -22,7 +22,8 @@ services:
     networks:
       bind9_subnet:  # Engadimos o contedor á rede personalizada 'bind9_subnet'
         ipv4_address: 192.28.5.2  # Enderezo IP estático asignado ao cliente
-
+    command: /bin/bash -c "apt-get update && apt-get install -y dnsutils && bash" 
+    # O comando fai un apt update, instala dnsutils (inclúe dig) e abre un bash interactivo.
 networks:
   bind9_subnet:  # Definimos unha rede personalizada chamada 'bind9_subnet'
     driver: bridge  # Tipo de rede: 'bridge', conecta os contedores nunha rede virtual
