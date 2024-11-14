@@ -1,15 +1,25 @@
-$TTL 38400	; 10 hours 40 minutes
-@		IN SOA	ns.pepe.int. some.email.address. (
-				10000002   ; serial
-				10800      ; refresh (3 hours)
-				3600       ; retry (1 hour)
-				604800     ; expire (1 week)
-				38400      ; minimum (10 hours 40 minutes)
-				)
-@		IN NS	ns.pepe.int.
-ns		IN A		172.28.5.1
-test	IN A		172.28.5.4
-www		IN A		172.28.5.7
-alias	IN CNAME	test
-texto	IN TXT		mensaje
-prob	IN A		125.44.32.1
+$TTL 38400  ; O tempo de vida (TTL) predeterminado para os rexistros DNS, en segundos.
+             ; Aquí, 38400 segundos (10 horas e 40 minutos).
+
+@    IN SOA ns.pepe.int. some.email.address. (  ; Rexistro SOA (Start of Authority) para a zona "pepe.int"
+               10000002   ; Serial do ficheiro de zona. Aumenta cando fas cambios (para actualizacións DNS).
+               10800      ; Tempo de actualización (refresh): 3 horas. O tempo que os servidores secundarios esperan para preguntar por cambios.
+               3600       ; Tempo de reintento (retry): 1 hora. Se o servidor secundario non pode conectar, intentará de novo despois deste tempo.
+               604800     ; Tempo de expiración (expire): 1 semana. O tempo tras o cal os servidores secundarios consideran os datos inválidos se non puideron actualizar.
+               38400      ; TTL mínimo: 10 horas e 40 minutos. Tempo predeterminado para os rexistros da zona.
+             )
+
+@    IN NS ns.pepe.int.   ; Rexistro NS (Name Server). Indica que o servidor principal da zona é "ns.pepe.int".
+
+ns   IN A 192.28.5.1      ; Rexistro A. Define a dirección IP asociada ao nome "ns.pepe.int".
+
+test IN A 192.28.5.4      ; Rexistro A. O dominio "test.pepe.int" apunta á IP 192.28.5.4.
+
+www  IN A 192.28.5.7      ; Rexistro A. O dominio "www.pepe.int" apunta á IP 192.28.5.7.
+
+alias IN CNAME test       ; Rexistro CNAME. O alias "alias.pepe.int" apunta a "test.pepe.int".
+
+texto IN TXT mensaje      ; Rexistro TXT. Contén un texto asociado ao dominio "texto.pepe.int".
+                          ; Neste caso, o valor é "mensaje".
+
+prueba23 IN A 125.44.32.1 ; Rexistro A. O dominio "prueba23.pepe.int" apunta á IP 125.44.32.1.

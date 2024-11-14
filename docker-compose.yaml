@@ -1,48 +1,33 @@
 services:
   servidor:
-    container_name: server
-    # usamos esta imagen para poder ver los logs
-    # la imagen de internetsystemsconsortium/bind9
-    # no muestra los logs
-    image: ubuntu/bind9
-    # especificamos la plataforma de la imagen
-    # es posible conflicto cuando el host es 'arm'
-    # ya que no existe una imagen para esa plataforma
-    platform: linux/amd64
+    container_name: server  # Nome do contedor para o servidor DNS
+    image: ubuntu/bind9  # Imaxe base que proporciona BIND9 para configurar DNS
+    platform: linux/amd64  # Especificamos a plataforma, útil para evitar conflitos en máquinas ARM
     ports:
-      - 54:53
+      - 54:53  # Mapeamos o porto 54 do host ao porto 53 (DNS) do contedor
     networks:
-      bind9_subnet:
-        ipv4_address: 172.28.5.4
+      bind9_subnet:  # Engadimos o contedor á rede personalizada 'bind9_subnet'
+        ipv4_address: 192.28.5.4  # Enderezo IP estático asignado ao servidor DNS
     volumes:
-      - ./conf:/etc/bind/
-      - ./zonas:/var/lib/bind/
-
-
-
-
+      - ./conf:/etc/bind/  # Montamos o directorio local './conf' dentro do contedor como '/etc/bind'
+      - ./zonas:/var/lib/bind/  # Montamos o directorio local './zonas' dentro do contedor como '/var/lib/bind'
 
   cliente:
-    container_name: ubuntu
-    image: ubuntu
-   
-    tty: true
-    stdin_open: true
-    # configuramos para que el cliente use nuestro dns
+    container_name: ubuntu  # Nome do contedor para o cliente
+    image: ubuntu  # Imaxe base Ubuntu para o cliente
+    tty: true  # Permite acceso interactivo ao terminal
+    stdin_open: true  # Mantén stdin aberto para interacción
     dns:
-      - 172.28.5.4
+      - 192.28.5.4  # Configuramos o servidor DNS do cliente apuntando ao IP do servidor DNS
     networks:
-      bind9_subnet:
-        ipv4_address: 172.28.5.2
-    
+      bind9_subnet:  # Engadimos o contedor á rede personalizada 'bind9_subnet'
+        ipv4_address: 192.28.5.2  # Enderezo IP estático asignado ao cliente
 
-
-    
 networks:
-  bind9_subnet:
-      driver: bridge 
-      ipam:
-        config:
-        - subnet: "172.28.0.0/16"  # Definir el rango de subred
-          ip_range: "172.28.5.0/24"  # Rango de IPs para los contenedores
-          gateway: "172.28.5.254"  # Puerta de enlace de la red
+  bind9_subnet:  # Definimos unha rede personalizada chamada 'bind9_subnet'
+    driver: bridge  # Tipo de rede: 'bridge', conecta os contedores nunha rede virtual
+    ipam:
+      config:
+      - subnet: "192.28.0.0/16"  # Rango de IPs dispoñibles na subrede
+        ip_range: "192.28.5.0/24"  # Rango específico asignado aos contedores
+        gateway: "192.28.5.254"  # Porta de enlace para a subrede
